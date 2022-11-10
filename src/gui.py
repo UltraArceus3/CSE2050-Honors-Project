@@ -2,6 +2,7 @@ import tkinter as tk
 from classes import BoxSet
 
 _DEF_TXT = "----------"
+pause = False
 
 def init():
     main = tk.Tk() # Initializes the main GUI window
@@ -12,15 +13,29 @@ def init():
     return main
 
 def _clicked(id, boxes, btns):
+    global pause
+    def _reset_btns():
+        [btn.config(text = _DEF_TXT) for id, btn in enumerate(btns) if boxes.boxes[id].b_type not in boxes._matched] # Resets button text back to default
+
+
+    if pause:
+        pause = False
+        _reset_btns()
+        
+
     print(boxes.boxes[int(id)])
     btns[id].config(text = boxes.boxes[id].b_type)
 
     res = boxes.on_click(id)
 
     if not(res[0]): # If player selects wrong box combination
-        [x.config(text = _DEF_TXT) for x in btns] # Resets button text back to default
-    elif res[1] <= 0: # If there are no more required boxes to match (i.e. player won)
-        pass
+        pause = True
+    elif res[1] <= 0: # If there are no more required boxes to match (i.e. player matched type)
+        boxes._matched.add(list(boxes._selected)[0])
+        print(boxes._matched)
+        boxes._selected = set()
+        boxes._sel_len = 0
+        _reset_btns()
 
     print(res)
 

@@ -11,6 +11,7 @@ class BoxSet:
     num_of_boxes = 2
     _selected = set() # set for storing selected elements
     _sel_len = 0 # stores number of items selected, as set can't
+    _matched = set()
     # sets are used instead of lists as useful operations can be done in O(1)
 
     def __post_init__(self):
@@ -20,6 +21,9 @@ class BoxSet:
         random.shuffle(self.boxes)
 
     def on_click(self, id):
+        if self.boxes[id].b_type in self._matched:
+            return (True, self.num_of_boxes - self._sel_len)
+
         self._selected.add(self.boxes[id].b_type)
         self._sel_len += 1
 
