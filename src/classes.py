@@ -9,6 +9,7 @@ class Box:
 @dataclass
 class BoxSet:
     types = ["Red", "Blue", "Green", "Yellow", "Orange", "Purple", "Brown", "Pink"]
+    _types_left = len(types)
     num_of_boxes = 2
     _selected = set() # set for storing selected elements
     _sel_len = 0 # stores number of items selected, as set can't
@@ -37,6 +38,9 @@ class BoxSet:
             return (False, self.num_of_boxes)
         
         else:
+            if self.num_of_boxes - self._sel_len == 0:
+                self._types_left -= 1
+                print(self._types_left)
             return (True, self.num_of_boxes - self._sel_len)
 
 

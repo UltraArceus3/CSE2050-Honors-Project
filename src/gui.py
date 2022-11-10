@@ -24,6 +24,11 @@ def init():
 
 def _reset(sess):
     sess._PAUSE = False
+    
+    sess.POINTS = 20
+    
+    sess.UI_TXT[0].config(text = "...")
+    sess.UI_TXT[1].config(text = f"Points: {sess.POINTS}")
 
     boxes = BoxSet()
 
@@ -36,7 +41,10 @@ def on_click(id, boxes, btns, sess):
         [btn.config(text = _DEF_TXT) for id, btn in enumerate(btns) if boxes.boxes[id].b_type not in boxes._matched] # Resets button text back to default
         sess.UI_TXT[0].config(text = "...")
 
-    if btns[id]['text'] != _DEF_TXT: # Prevents already selected boxes from being re-selected
+    if btns[id]['text'] != _DEF_TXT and len(boxes._selected) > 0: # Prevents already selected boxes from being re-selected
+        return
+
+    if sess.POINTS <= 0:
         return
 
     if sess._PAUSE:
@@ -46,6 +54,7 @@ def on_click(id, boxes, btns, sess):
 
     print(boxes.boxes[id])
     btns[id].config(text = boxes.boxes[id].b_type)
+    sess.UI_TXT[0].config(text = f"SELECTED: {boxes.boxes[id].b_type}")
 
     res = boxes._clicked(id)
 
@@ -53,6 +62,11 @@ def on_click(id, boxes, btns, sess):
         sess._PAUSE = True
         sess.POINTS -= 1
         sess.UI_TXT[0].config(text = "INCORRECT!")
+
+        if sess.POINTS <= 0:
+            _reset_btns()
+            sess.UI_TXT[0].config(text = "you lost... press the reset button to start over.")
+
     elif res[1] <= 0: # If there are no more required boxes to match (i.e. player matched type)
         sess._PAUSE = True
         
@@ -65,6 +79,9 @@ def on_click(id, boxes, btns, sess):
         boxes._selected = set()
         boxes._sel_len = 0
         
+    if boxes._types_left == 0:
+        sess.PAUSE = True
+        sess.UI_TXT[0].config(text = "YOU WON" + "!" * len(boxes.types))
 
     sess.UI_TXT[1].config(text = f"Points: {sess.POINTS}")
     print(res)
