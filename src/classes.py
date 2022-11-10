@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import random
+from tkinter import Tk, Label
 
 @dataclass
 class Box:
@@ -38,4 +39,10 @@ class BoxSet:
         else:
             return (True, self.num_of_boxes - self._sel_len)
 
-                
+
+@dataclass
+class Session:
+    _PAUSE = False
+    WINDOW: Tk
+    UI_TXT: Label
+    POINTS = 20

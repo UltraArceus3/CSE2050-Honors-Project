@@ -6,4 +6,4 @@ if __name__ == "__main__":
     
     gui._reset(ui)
 
-    ui.mainloop() # Main window loop
+    ui.WINDOW.mainloop() # Main window loop
