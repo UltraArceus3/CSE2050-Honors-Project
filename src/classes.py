@@ -20,7 +20,7 @@ class BoxSet:
         random.shuffle(self.boxes)
 
     def on_click(self, id):
-        self._selected.add(id)
+        self._selected.add(self.boxes[id].b_type)
         self._sel_len += 1
 
         # If more than 1 type of element selected, incorrect match, reset selection
