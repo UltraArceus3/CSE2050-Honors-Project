@@ -3,10 +3,7 @@ import classes
 
 if __name__ == "__main__":
     ui = gui.init()
-    boxes = classes.BoxSet()
-
-    print(len(boxes.boxes))
-    gui.visualize_boxes(ui, boxes)
-
+    
+    gui._reset(ui)
 
     ui.mainloop() # Main window loop
