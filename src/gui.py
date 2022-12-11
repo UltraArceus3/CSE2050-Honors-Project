@@ -1,7 +1,7 @@
 import tkinter as tk
 from classes import BoxSet, Session
 
-_DEF_TXT = "----------"
+
 
 
 def init():
@@ -43,10 +43,10 @@ def on_click(id, boxes, btns, sess):
 
     def _reset_btns():
         # Resets button text back to default
-        [btn.config(text = _DEF_TXT, bg = sess.WINDOW.cget("bg")) for id, btn in enumerate(btns) if boxes.boxes[id].b_type not in boxes._matched]
+        [btn.config(text = boxes._DEF_TXT, bg = sess.WINDOW.cget("bg")) for id, btn in enumerate(btns) if boxes.boxes[id].b_type not in boxes._matched]
         sess.UI_TXT[0].config(text = "...")
 
-    if btns[id]['text'] != _DEF_TXT and len(boxes._selected) > 0: # Prevents already selected boxes from being re-selected
+    if btns[id]['text'] != boxes._DEF_TXT and len(boxes._selected) > 0: # Prevents already selected boxes from being re-selected
         return
 
     if sess.POINTS <= 0:
@@ -60,7 +60,7 @@ def on_click(id, boxes, btns, sess):
 
     print(boxes.boxes[id])
     sess.UI_TXT[0].config(bg = sess.WINDOW.cget("bg"))
-    btns[id].config(text = boxes.boxes[id].b_type, bg = "lemon chiffon")
+    btns[id].config(text = boxes.boxes[id].b_type, bg = boxes._COLORS["selected"])
     sess.UI_TXT[0].config(text = f"SELECTED: {boxes.boxes[id].b_type}")
 
     res = boxes._clicked(id)
@@ -70,7 +70,7 @@ def on_click(id, boxes, btns, sess):
         sess.POINTS -= 1
         sess.UI_TXT[0].config(text = "INCORRECT!", bg = "red")
 
-        [btn.config(bg = "red") for btn in btns if btn.cget("bg") == "lemon chiffon"]
+        [btn.config(bg = boxes._COLORS["incorrect"]) for btn in btns if btn.cget("bg") == boxes._COLORS["selected"]]
 
         if sess.POINTS <= 0:
             _reset_btns()
@@ -84,7 +84,7 @@ def on_click(id, boxes, btns, sess):
         sess.POINTS += 1
         sess.UI_TXT[0].config(text = "CORRECT!!!", bg = "light green")
 
-        [btn.config(bg = "light green") for btn in btns if btn.cget("bg") == "lemon chiffon"]
+        [btn.config(bg = boxes._COLORS["correct"]) for btn in btns if btn.cget("bg") == boxes._COLORS["selected"]]
         #btns[id].config(bg="light green")
 
         print(boxes._matched)
@@ -107,6 +107,6 @@ def visualize_boxes(session, boxes: BoxSet):
     for y in range(box_y):
         for x in range(box_x):
             id = x + y*box_x
-            btns.append(tk.Button(session.WINDOW, text = _DEF_TXT, command = lambda id = id: on_click(id, boxes, btns, session), 
+            btns.append(tk.Button(session.WINDOW, text = boxes._DEF_TXT, command = lambda id = id: on_click(id, boxes, btns, session), 
                                   width = 10, height = 5))
             btns[-1].grid(row = y + 3, column = x)

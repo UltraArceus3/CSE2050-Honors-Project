@@ -8,6 +8,13 @@ class Box:
 
 @dataclass
 class BoxSet:
+    _DEF_TXT = "----------"
+    _COLORS = {
+        "selected": "lemon chiffon",
+        "correct": "light green",
+        "incorrect": "red"
+    }
+
     types = ["Red", "Blue", "Green", "Yellow", "Orange", "Purple", "Brown", "Pink"]
     _types_left = len(types)
     num_of_boxes = 2
