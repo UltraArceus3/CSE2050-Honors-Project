@@ -37,6 +37,9 @@ def _reset(sess):
 
 def on_click(id, boxes, btns, sess):
     global _PAUSE
+
+    sess.UI_TXT[0].config(bg = sess.WINDOW.cget("bg"))
+
     def _reset_btns():
         [btn.config(text = _DEF_TXT) for id, btn in enumerate(btns) if boxes.boxes[id].b_type not in boxes._matched] # Resets button text back to default
         sess.UI_TXT[0].config(text = "...")
@@ -61,7 +64,7 @@ def on_click(id, boxes, btns, sess):
     if not(res[0]): # If player selects wrong box combination
         sess._PAUSE = True
         sess.POINTS -= 1
-        sess.UI_TXT[0].config(text = "INCORRECT!")
+        sess.UI_TXT[0].config(text = "INCORRECT!", bg = "red")
 
         if sess.POINTS <= 0:
             _reset_btns()
@@ -73,7 +76,9 @@ def on_click(id, boxes, btns, sess):
         boxes._matched.add(list(boxes._selected)[0])
         
         sess.POINTS += 1
-        sess.UI_TXT[0].config(text = "CORRECT!!!")
+        sess.UI_TXT[0].config(text = "CORRECT!!!", bg = "light green")
+
+        btns[id].config(bg="light green")
 
         print(boxes._matched)
         boxes._selected = set()
@@ -81,7 +86,7 @@ def on_click(id, boxes, btns, sess):
         
     if boxes._types_left == 0:
         sess.PAUSE = True
-        sess.UI_TXT[0].config(text = "YOU WON" + "!" * len(boxes.types))
+        sess.UI_TXT[0].config(text = "YOU WON" + "!" * len(boxes.types), bg = "lime")
 
     sess.UI_TXT[1].config(text = f"Points: {sess.POINTS}")
     print(res)
@@ -95,5 +100,6 @@ def visualize_boxes(session, boxes: BoxSet):
     for y in range(box_y):
         for x in range(box_x):
             id = x + y*box_x
-            btns.append(tk.Button(session.WINDOW, text = _DEF_TXT, command = lambda id = id: on_click(id, boxes, btns, session), width = 10, height = 5))
+            btns.append(tk.Button(session.WINDOW, text = _DEF_TXT, command = lambda id = id: on_click(id, boxes, btns, session), 
+                                  width = 10, height = 5))
             btns[-1].grid(row = y + 3, column = x)
