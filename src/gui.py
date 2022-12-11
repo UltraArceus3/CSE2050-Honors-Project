@@ -7,6 +7,7 @@ _DEF_TXT = "----------"
 def init():
     win = tk.Tk() # Initializes the main GUI window
 
+    win.title("Memory Game")
     win.resizable(False, False)
     tk.Label(win, text = "Memory Game by Rany Kamel", font=("Arial", 10)).grid(row = 0, column = 0, columnspan=100, sticky=tk.EW)
 
@@ -27,7 +28,7 @@ def _reset(sess):
     
     sess.POINTS = 20
     
-    sess.UI_TXT[0].config(text = "...")
+    sess.UI_TXT[0].config(text = "...", bg = sess.WINDOW.cget("bg"))
     sess.UI_TXT[1].config(text = f"Points: {sess.POINTS}")
 
     boxes = BoxSet()
@@ -38,10 +39,11 @@ def _reset(sess):
 def on_click(id, boxes, btns, sess):
     global _PAUSE
 
-    sess.UI_TXT[0].config(bg = sess.WINDOW.cget("bg"))
+    
 
     def _reset_btns():
-        [btn.config(text = _DEF_TXT) for id, btn in enumerate(btns) if boxes.boxes[id].b_type not in boxes._matched] # Resets button text back to default
+        # Resets button text back to default
+        [btn.config(text = _DEF_TXT, bg = sess.WINDOW.cget("bg")) for id, btn in enumerate(btns) if boxes.boxes[id].b_type not in boxes._matched]
         sess.UI_TXT[0].config(text = "...")
 
     if btns[id]['text'] != _DEF_TXT and len(boxes._selected) > 0: # Prevents already selected boxes from being re-selected
@@ -55,8 +57,10 @@ def on_click(id, boxes, btns, sess):
         _reset_btns()
         
 
+
     print(boxes.boxes[id])
-    btns[id].config(text = boxes.boxes[id].b_type)
+    sess.UI_TXT[0].config(bg = sess.WINDOW.cget("bg"))
+    btns[id].config(text = boxes.boxes[id].b_type, bg = "lemon chiffon")
     sess.UI_TXT[0].config(text = f"SELECTED: {boxes.boxes[id].b_type}")
 
     res = boxes._clicked(id)
@@ -65,6 +69,8 @@ def on_click(id, boxes, btns, sess):
         sess._PAUSE = True
         sess.POINTS -= 1
         sess.UI_TXT[0].config(text = "INCORRECT!", bg = "red")
+
+        [btn.config(bg = "red") for btn in btns if btn.cget("bg") == "lemon chiffon"]
 
         if sess.POINTS <= 0:
             _reset_btns()
@@ -78,7 +84,8 @@ def on_click(id, boxes, btns, sess):
         sess.POINTS += 1
         sess.UI_TXT[0].config(text = "CORRECT!!!", bg = "light green")
 
-        btns[id].config(bg="light green")
+        [btn.config(bg = "light green") for btn in btns if btn.cget("bg") == "lemon chiffon"]
+        #btns[id].config(bg="light green")
 
         print(boxes._matched)
         boxes._selected = set()

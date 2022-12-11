@@ -11,12 +11,13 @@ class BoxSet:
     types = ["Red", "Blue", "Green", "Yellow", "Orange", "Purple", "Brown", "Pink"]
     _types_left = len(types)
     num_of_boxes = 2
-    _selected = set() # set for storing selected elements
+
     _sel_len = 0 # stores number of items selected, as set can't
     _matched = set()
     # sets are used instead of lists as useful operations can be done in O(1)
 
     def __post_init__(self):
+        # set for storing selected elements
         self._selected = set()
         # Creates list of boxes num_of_boxes number of times
         self.boxes = [Box(x) for _ in range(self.num_of_boxes) for x in self.types]
