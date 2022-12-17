@@ -52,12 +52,13 @@ def on_click(id, boxes, btns, sess):
     if sess.POINTS <= 0:
         return
 
+    if btns[id].cget("bg") == boxes._COLORS["correct"]:
+        return
+
     if sess._PAUSE:
         sess._PAUSE = False
         _reset_btns()
         
-
-
     print(boxes.boxes[id])
     sess.UI_TXT[0].config(bg = sess.WINDOW.cget("bg"))
     btns[id].config(text = boxes.boxes[id].b_type, bg = boxes._COLORS["selected"])
